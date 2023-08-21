@@ -1,103 +1,50 @@
 'use client';
 
-import Image from 'next/image';
-import styles from './page.module.css';
-import { useEffect } from 'react';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { growthbook } from '@/utils/growthbook';
+import { useEffect } from 'react';
+
+type BannerControlDetails = {
+  enabled: boolean;
+  banner_id?: string;
+  redirection_url?: string;
+  banner_url?: string;
+};
+type BannerControlProps = {
+  placement_pre: BannerControlDetails;
+  placement_post: BannerControlDetails;
+  placement_email: BannerControlDetails;
+};
 
 export default function Home() {
+  // String/Number/JSON features with a fallback value
+
   useEffect(() => {
-    // Load features asynchronously when the app renders
-    growthbook.loadFeatures();
+    growthbook.setAttributes({
+      id: Math.random(),
+    });
   }, []);
+
+  const bannerControls: BannerControlProps | Record<string, never> =
+    useFeatureValue('nex_card_banner_v2', {});
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
+    <main>
+      {Object.entries(bannerControls).length > 0 ? (
         <div>
-          <a
-            href="https://vercel.com?utm_source=typescript-nextjs-starter"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+          {(bannerControls.placement_pre as BannerControlDetails).enabled && (
+            <div>Placement Pre</div>
+          )}
+          {(bannerControls.placement_post as BannerControlDetails).enabled && (
+            <div>Placement Post</div>
+          )}
+          {(bannerControls.placement_email as BannerControlDetails).enabled && (
+            <div>Placement Email</div>
+          )}
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=typescript-nextjs-starter"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=typescript-nextjs-starter"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=typescript-nextjs-starter"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=typescript-nextjs-starter"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      ) : (
+        <div>Loading...</div>
+      )}
     </main>
   );
 }
