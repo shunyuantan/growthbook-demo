@@ -3,7 +3,7 @@
 
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { growthbook } from '@/utils/growthbook';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -18,19 +18,24 @@ type BannerControlProps = {
 };
 
 export default function Home() {
-  // String/Number/JSON features with a fallback value
+  const [RANDOM_ID, setRandomId] = useState<number>(0);
+
+  useEffect(() => {
+    setRandomId(Math.floor(Math.random() * 10000));
+  }, []);
 
   useEffect(() => {
     growthbook.setAttributes({
-      id: Math.random(),
+      id: RANDOM_ID,
     });
-  }, []);
+  }, [RANDOM_ID]);
 
   const bannerControls: BannerControlProps | Record<string, never> =
     useFeatureValue('nex_card_banner_v2', {});
 
   return (
     <main className="mx-8 my-12">
+      <h1 className="text-xl mb-4"> Random ID: {RANDOM_ID}</h1>
       {Object.entries(bannerControls).length > 0 ? (
         <div className="space-y-4">
           {(bannerControls.placement_pre as BannerControlDetails).enabled ? (
@@ -72,7 +77,7 @@ const BannerCard = (props: BannerControlDetails & { title: string }) => {
       <h1 className="text-xl">{title}</h1>
       <div>
         <p>Properties</p>
-        <pre className="break-all">
+        <pre className="whitespace-break-spaces">
           {JSON.stringify({ banner_id, banner_url, redirection_url }, null, 2)}
         </pre>
       </div>
