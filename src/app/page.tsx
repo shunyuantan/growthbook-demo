@@ -1,7 +1,15 @@
+'use client';
+
 import Image from 'next/image';
 import styles from './page.module.css';
+import { useEffect } from 'react';
+import { growthbook } from '@/utils/growthbook';
 
 export default function Home() {
+  useEffect(() => {
+    // Load features asynchronously when the app renders
+    growthbook.loadFeatures();
+  }, []);
   return (
     <main className={styles.main}>
       <div className={styles.description}>
