@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <main className="mx-8 my-12">
-      <h1 className="text-xl mb-4"> Random ID: {RANDOM_ID}</h1>
+      <h1 className="mb-4 text-xl"> Random ID: {RANDOM_ID}</h1>
       {Object.entries(bannerControls).length > 0 ? (
         <div className="space-y-4">
           {(bannerControls.placement_pre as BannerControlDetails).enabled ? (
@@ -73,7 +73,7 @@ export default function Home() {
 const BannerCard = (props: BannerControlDetails & { title: string }) => {
   const { banner_id, banner_url, redirection_url, title } = props;
   return (
-    <div className="border border-gray-600 p-4 rounded-md">
+    <div className="p-4 border border-gray-600 rounded-md">
       <h1 className="text-xl">{title}</h1>
       <div>
         <p>Properties</p>
@@ -83,9 +83,11 @@ const BannerCard = (props: BannerControlDetails & { title: string }) => {
       </div>
       <div>
         <p>Items</p>
-        <a href={redirection_url} target="_blank">
-          <img id={banner_id} src={banner_url} alt="meme" />
-        </a>
+        <div className="w-40">
+          <a href={redirection_url} target="_blank">
+            <img id={banner_id} src={banner_url} alt="meme" />
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -96,7 +98,7 @@ const Spinner = () => {
     <div role="status">
       <svg
         aria-hidden="true"
-        className="w-8 h-8 mr-2  animate-spin text-black fill-yellow-400"
+        className="w-8 h-8 mr-2 text-black animate-spin fill-yellow-400"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
