@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@growthbook/growthbook-react": "0.17.0",
+    "@snowplow/browser-tracker": "3.14.0",
     "autoprefixer": "10.4.15",
     "next": "13.4.16",
     "postcss": "8.4.28",

@@ -4,6 +4,7 @@
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { growthbook } from '@/utils/growthbook';
 import { useEffect, useState } from 'react';
+import { initialiseSnowplow } from '@/utils/snowplow';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -18,6 +19,7 @@ type BannerControlProps = {
 };
 
 export default function Home() {
+  initialiseSnowplow();
   const [RANDOM_ID, setRandomId] = useState<number>(0);
 
   useEffect(() => {
