@@ -1,4 +1,6 @@
 import { GrowthBook } from '@growthbook/growthbook-react';
+import { trackStructEvent } from '@snowplow/browser-tracker';
+import { TRACKER_NAME } from './snowplow';
 
 export const growthbook = new GrowthBook({
   apiHost: process.env.NEXT_PUBLIC_GB_API_HOST,
@@ -10,5 +12,23 @@ export const growthbook = new GrowthBook({
       experimentId: experiment.key,
       variationId: result.key,
     });
+    trackStructEvent(
+      {
+        category: 'GrowthBook Demo',
+        action: 'Viewed Experiment',
+        label: 'Experiment Id',
+        property: experiment.key,
+      },
+      [TRACKER_NAME],
+    );
+    trackStructEvent(
+      {
+        category: 'GrowthBook Demo',
+        action: 'Viewed Experiment',
+        label: 'Variation Id',
+        property: result.key,
+      },
+      [TRACKER_NAME],
+    );
   },
 });
