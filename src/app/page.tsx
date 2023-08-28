@@ -5,6 +5,7 @@ import { useFeatureValue } from '@growthbook/growthbook-react';
 import { growthbook } from '@/utils/growthbook';
 import { useEffect, useState } from 'react';
 import { initialiseSnowplow } from '@/utils/snowplow';
+import { setUserId } from '@snowplow/browser-tracker';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -30,6 +31,7 @@ export default function Home() {
     growthbook.setAttributes({
       id: RANDOM_ID,
     });
+    setUserId(RANDOM_ID.toString());
   }, [RANDOM_ID]);
 
   const bannerControls: BannerControlProps | Record<string, never> =
