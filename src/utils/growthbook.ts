@@ -16,17 +16,8 @@ export const growthbook = new GrowthBook({
       {
         category: 'GrowthBook Demo',
         action: 'Viewed Experiment',
-        label: 'Experiment Id',
+        label: result.key,
         property: experiment.key,
-      },
-      [TRACKER_NAME],
-    );
-    trackStructEvent(
-      {
-        category: 'GrowthBook Demo',
-        action: 'Viewed Experiment',
-        label: 'Variation Id',
-        property: result.key,
       },
       [TRACKER_NAME],
     );
