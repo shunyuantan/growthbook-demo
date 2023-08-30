@@ -1,6 +1,16 @@
 import { newTracker, TrackerConfiguration } from '@snowplow/browser-tracker';
 
-const TRACKER_URL = 'https://snowplow-collector.iluma.ai';
+const TESTING_TRACKER_URL =
+  'https://c4ad0795-3fc7-4ebc-a0fa-fbb62c94fe6a.app.try-snowplow.com';
+
+let TRACKER_URL: string;
+
+console.log('process.env.NODE', process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'production') {
+  TRACKER_URL = 'https://snowplow-collector.iluma.ai';
+} else {
+  TRACKER_URL = TESTING_TRACKER_URL;
+}
 
 /**
  * @description SnowPlow tracker configuration
@@ -12,5 +22,6 @@ const configuration: TrackerConfiguration = {
 
 export const TRACKER_NAME = 'spNexGrowthBookDemo';
 export const initialiseSnowplow = () => {
+  console.log('tracking_url ==> ', TRACKER_URL);
   return newTracker(TRACKER_NAME, TRACKER_URL, configuration);
 };
