@@ -6,7 +6,7 @@ import { growthbook } from '@/utils/growthbook';
 import { useEffect, useState } from 'react';
 import { TRACKER_NAME, initialiseSnowplow } from '@/utils/snowplow';
 import { trackStructEvent } from '@snowplow/browser-tracker';
-import { useRouter } from 'next/router';
+import { v4 as uuidv4 } from 'uuid';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -22,35 +22,37 @@ type BannerControlProps = {
 
 export default function Home() {
   initialiseSnowplow();
-  const [RANDOM_ID, setRandomId] = useState<number>(0);
+  const [INVOICE_ID, setInvoiceId] = useState<string>('');
+  const [BUSINESS_ID, setBusinessId] = useState<string>('');
 
   useEffect(() => {
-    setRandomId(Math.floor(Math.random() * 10000));
+    setInvoiceId(() => `invoice_${uuidv4()}`);
+    setBusinessId(() => `business_${uuidv4()}`);
   }, []);
-  const invoiceId = `invoiceId_${RANDOM_ID}`;
-  const businessId = `business_${RANDOM_ID}`;
 
   const bannerControls: BannerControlProps | Record<string, never> =
     useFeatureValue('nex_card_banner_v2', {}); //growthbook
 
   useEffect(() => {
     growthbook.setAttributes({
-      id: RANDOM_ID,
-      businessId, // from props <-- controller for whatever variant served
-      invoiceId, // from props
+      businessId: BUSINESS_ID, // from props
+      invoiceId: INVOICE_ID, // from props
     });
 
     // based on the information sent, i can infer the variation
-  }, [RANDOM_ID, invoiceId, businessId]);
+  }, [BUSINESS_ID, INVOICE_ID]);
 
   return (
     <main className="mx-8 my-12">
-      <h1 className="mb-4 text-xl"> Random ID: {RANDOM_ID}</h1>
+      <div>
+        <h1 className="mb-4 text-xl"> INVOICE ID: {INVOICE_ID}</h1>
+        <h1 className="mb-4 text-xl"> BUSINESS ID: {BUSINESS_ID}</h1>
+      </div>
       {Object.entries(bannerControls).length > 0 ? (
         <div className="space-y-4">
           {(bannerControls.placement_pre as BannerControlDetails).enabled ? (
             <BannerCard
-              invoiceId={invoiceId}
+              invoiceId={INVOICE_ID}
               title="Placement Pre"
               {...(bannerControls.placement_pre as BannerControlDetails)}
             />
@@ -59,7 +61,7 @@ export default function Home() {
           )}
           {(bannerControls.placement_post as BannerControlDetails).enabled ? (
             <BannerCard
-              invoiceId={invoiceId}
+              invoiceId={INVOICE_ID}
               title="Placement Post"
               {...(bannerControls.placement_post as BannerControlDetails)}
             />
@@ -68,7 +70,7 @@ export default function Home() {
           )}
           {(bannerControls.placement_email as BannerControlDetails).enabled ? (
             <BannerCard
-              invoiceId={invoiceId}
+              invoiceId={INVOICE_ID}
               title="Placement Email"
               {...(bannerControls.placement_email as BannerControlDetails)}
             />
