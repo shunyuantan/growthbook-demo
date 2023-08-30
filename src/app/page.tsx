@@ -22,12 +22,14 @@ type BannerControlProps = {
 
 export default function Home() {
   initialiseSnowplow();
+  const [RANDOMISING_ID, setRandomisingId] = useState<string>('');
   const [INVOICE_ID, setInvoiceId] = useState<string>('');
   const [BUSINESS_ID, setBusinessId] = useState<string>('');
 
   useEffect(() => {
     setInvoiceId(() => `invoice_${uuidv4()}`);
     setBusinessId(() => `business_${uuidv4()}`);
+    setRandomisingId(() => `${uuidv4()}`);
   }, []);
 
   const bannerControls: BannerControlProps | Record<string, never> =
@@ -35,12 +37,13 @@ export default function Home() {
 
   useEffect(() => {
     growthbook.setAttributes({
+      id: RANDOMISING_ID, // allows GrowthBook to randomise the user
       businessId: BUSINESS_ID, // from props
       invoiceId: INVOICE_ID, // from props
     });
 
     // based on the information sent, i can infer the variation
-  }, [BUSINESS_ID, INVOICE_ID]);
+  }, [RANDOMISING_ID, BUSINESS_ID, INVOICE_ID]);
 
   return (
     <main className="mx-8 my-12">
