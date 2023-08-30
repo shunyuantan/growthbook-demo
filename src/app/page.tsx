@@ -4,8 +4,9 @@
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { growthbook } from '@/utils/growthbook';
 import { useEffect, useState } from 'react';
-import { initialiseSnowplow } from '@/utils/snowplow';
-import { setUserId } from '@snowplow/browser-tracker';
+import { TRACKER_NAME, initialiseSnowplow } from '@/utils/snowplow';
+import { trackStructEvent } from '@snowplow/browser-tracker';
+import { useRouter } from 'next/router';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -26,16 +27,21 @@ export default function Home() {
   useEffect(() => {
     setRandomId(Math.floor(Math.random() * 10000));
   }, []);
+  const invoiceId = `invoiceId_${RANDOM_ID}`;
+  const businessId = `business_${RANDOM_ID}`;
+
+  const bannerControls: BannerControlProps | Record<string, never> =
+    useFeatureValue('nex_card_banner_v2', {}); //growthbook
 
   useEffect(() => {
     growthbook.setAttributes({
       id: RANDOM_ID,
+      businessId, // from props <-- controller for whatever variant served
+      invoiceId, // from props
     });
-    setUserId(RANDOM_ID.toString());
-  }, [RANDOM_ID]);
 
-  const bannerControls: BannerControlProps | Record<string, never> =
-    useFeatureValue('nex_card_banner_v2', {});
+    // based on the information sent, i can infer the variation
+  }, [RANDOM_ID, invoiceId, businessId]);
 
   return (
     <main className="mx-8 my-12">
@@ -44,6 +50,7 @@ export default function Home() {
         <div className="space-y-4">
           {(bannerControls.placement_pre as BannerControlDetails).enabled ? (
             <BannerCard
+              invoiceId={invoiceId}
               title="Placement Pre"
               {...(bannerControls.placement_pre as BannerControlDetails)}
             />
@@ -52,6 +59,7 @@ export default function Home() {
           )}
           {(bannerControls.placement_post as BannerControlDetails).enabled ? (
             <BannerCard
+              invoiceId={invoiceId}
               title="Placement Post"
               {...(bannerControls.placement_post as BannerControlDetails)}
             />
@@ -60,6 +68,7 @@ export default function Home() {
           )}
           {(bannerControls.placement_email as BannerControlDetails).enabled ? (
             <BannerCard
+              invoiceId={invoiceId}
               title="Placement Email"
               {...(bannerControls.placement_email as BannerControlDetails)}
             />
@@ -74,8 +83,23 @@ export default function Home() {
   );
 }
 
-const BannerCard = (props: BannerControlDetails & { title: string }) => {
-  const { banner_id, banner_url, redirection_url, title } = props;
+const BannerCard = (
+  props: BannerControlDetails & {
+    title: string;
+    invoiceId: string;
+  },
+) => {
+  const { banner_id, banner_url, redirection_url, title, invoiceId } = props;
+  const handleBannerClick = (bannerUrl: string) => {
+    trackStructEvent(
+      {
+        action: 'Banner Clicked',
+        category: invoiceId,
+        label: bannerUrl,
+      },
+      [TRACKER_NAME],
+    );
+  };
   return (
     <div className="p-4 border border-gray-600 rounded-md">
       <h1 className="text-xl">{title}</h1>
@@ -88,9 +112,11 @@ const BannerCard = (props: BannerControlDetails & { title: string }) => {
       <div>
         <p>Items</p>
         <div className="w-40">
-          <a href={redirection_url} target="_blank">
-            <img id={banner_id} src={banner_url} alt="meme" />
-          </a>
+          {banner_url && (
+            <button onClick={() => handleBannerClick(banner_url)}>
+              <img id={banner_id} src={banner_url} alt="meme" />
+            </button>
+          )}
         </div>
       </div>
     </div>

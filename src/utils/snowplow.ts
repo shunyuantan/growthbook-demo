@@ -1,4 +1,11 @@
-import { newTracker, TrackerConfiguration } from '@snowplow/browser-tracker';
+import {
+  newTracker,
+  setUserId,
+  TrackerConfiguration,
+} from '@snowplow/browser-tracker';
+
+const TESTING_TRACKER_URL =
+  'https://c4ad0795-3fc7-4ebc-a0fa-fbb62c94fe6a.app.try-snowplow.com';
 
 const TRACKER_URL = 'https://snowplow-collector.iluma.ai';
 
@@ -12,5 +19,5 @@ const configuration: TrackerConfiguration = {
 
 export const TRACKER_NAME = 'spNexGrowthBookDemo';
 export const initialiseSnowplow = () => {
-  return newTracker(TRACKER_NAME, TRACKER_URL, configuration);
+  return newTracker(TRACKER_NAME, TESTING_TRACKER_URL, configuration);
 };
