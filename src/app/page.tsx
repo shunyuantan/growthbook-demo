@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { TRACKER_NAME, initialiseSnowplow } from '@/utils/snowplow';
 import { trackStructEvent } from '@snowplow/browser-tracker';
 import { v4 as uuidv4 } from 'uuid';
+import toast, { Toaster } from 'react-hot-toast';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -96,6 +97,7 @@ const BannerCard = (
 ) => {
   const { banner_id, banner_url, redirection_url, title, invoiceId } = props;
   const handleBannerClick = (bannerUrl: string) => {
+    toast.success('Banner Clicked');
     trackStructEvent(
       {
         action: 'Banner Clicked',
@@ -107,6 +109,7 @@ const BannerCard = (
   };
   return (
     <div className="p-4 border border-gray-600 rounded-md">
+      <Toaster />
       <h1 className="text-xl">{title}</h1>
       <div>
         <p>Properties</p>
