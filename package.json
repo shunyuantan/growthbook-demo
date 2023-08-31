@@ -26,10 +26,14 @@
     ]
   },
   "dependencies": {
+    "@growthbook/growthbook": "0.28.0",
     "@growthbook/growthbook-react": "0.17.0",
     "@snowplow/browser-tracker": "3.14.0",
     "autoprefixer": "10.4.15",
-    "next": "13.4.16",
+    "cross-fetch": "3.1.5",
+    "eventsource": "2.0.2",
+    "google": "link:@next/font/google",
+    "next": "13.1.2",
     "postcss": "8.4.28",
     "postmark": "3.0.19",
     "react": "18.2.0",
