@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import { TRACKER_NAME, initialiseSnowplow } from '@/utils/snowplow';
+import { TRACKER_NAME } from '@/utils/snowplow';
 import { trackStructEvent } from '@snowplow/browser-tracker';
 import toast, { Toaster } from 'react-hot-toast';
 import { useIdsStore } from '@/hooks/useIdsStore';
@@ -19,11 +19,12 @@ type BannerControlProps = {
 };
 
 export default function Home() {
-  initialiseSnowplow();
   const { BUSINESS_ID, INVOICE_ID } = useIdsStore();
 
   const bannerControls: BannerControlProps | Record<string, never> =
     useFeatureValue('nex_card_banner_v2', {}); //growthbook
+
+  console.log(bannerControls);
 
   return (
     <main className="mx-8 my-12">

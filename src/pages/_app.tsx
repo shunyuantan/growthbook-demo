@@ -1,11 +1,12 @@
 import type { AppProps } from 'next/app';
 import { useIdsStore } from '@/hooks/useIdsStore';
 import { BUSINESS_IDS, INVOICE_IDS } from '@/utils/constants';
-import { growthbook } from '@/utils/growthbook-client';
+import { growthbookClient } from '@/utils/growthbook-client';
 import { GrowthBookProvider } from '@growthbook/growthbook-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Inter } from 'next/font/google';
 import '../styles/globals.css';
+import { initialiseSnowplow } from '@/utils/snowplow';
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ['latin'] });
@@ -17,6 +18,7 @@ const generateRandomNumber = () => {
 };
 
 export default function App({ Component, pageProps }: AppProps) {
+  initialiseSnowplow();
   const [RANDOMISING_INDEX, setRandomisingIndex] = useState<number>(0);
   const { INVOICE_ID, BUSINESS_ID, setBusinessId, setInvoiceId } =
     useIdsStore();
@@ -31,8 +33,8 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [RANDOMISING_INDEX, setBusinessId, setInvoiceId]);
 
   const setGrowthBookAttributes = useCallback(() => {
-    if (!growthbook?.ready) return;
-    growthbook.setAttributes({
+    if (!growthbookClient?.ready) return;
+    growthbookClient.setAttributes({
       businessId: BUSINESS_ID, // Configured for ForceValue
       invoiceId: INVOICE_ID, // Using for hash assignment for experiment
     });
@@ -40,7 +42,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     // Load features asynchronously when the app renders
-    growthbook
+    growthbookClient
       .loadFeatures({ autoRefresh: true })
       .then((res) => {
         console.log('loadingFeatures');
@@ -65,7 +67,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [setGrowthBookAttributes]);
 
   return (
-    <GrowthBookProvider growthbook={growthbook}>
+    <GrowthBookProvider growthbook={growthbookClient}>
       <main className={inter.className}>
         <Component {...pageProps} />
       </main>
