@@ -73,7 +73,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { invoiceId, businessId, locale } = JSON.parse(req.body);
+  const { invoiceId, businessId, locale, emailAddress } = JSON.parse(req.body);
 
   // Load feature flags
   const gbContext = getServerSideGrowthBookContext();
@@ -97,7 +97,7 @@ export default async function handler(
     const client = new ServerClient(POSTMARK_API_KEY ?? '');
     await client.sendEmailWithTemplate({
       From: 'shun.tan@xendit.co',
-      To: 'shun.tan@xendit.co',
+      To: emailAddress,
       TemplateId: Number(emailTemplate),
       TemplateModel: {
         product_url: 'product_url_Value',

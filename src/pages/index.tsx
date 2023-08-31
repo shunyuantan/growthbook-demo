@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { useIdsStore } from '@/hooks/useIdsStore';
@@ -86,31 +86,10 @@ export default function Home() {
     setGrowthBookAttributes();
   }, [setGrowthBookAttributes]);
 
-  const sendEmail = async () => {
-    try {
-      const result = await fetch('api/send-email', {
-        method: 'POST',
-        body: JSON.stringify({
-          invoiceId: INVOICE_ID,
-          businessId: BUSINESS_ID,
-          locale: 'en',
-        }),
-      });
-      toast.success(result.status.toString());
-    } catch (error) {
-      toast.error((error as Error).message);
-    }
-  };
-
   return (
     <main className="mx-8 my-12">
       <Toaster />
-      <button
-        className="p-2 border rounded-md cursor-pointer"
-        onClick={sendEmail}
-      >
-        Send Email
-      </button>
+
       <div>
         <h3 className=""> BUSINESS ID: {BUSINESS_ID}</h3>
         <h3 className=""> INVOICE ID: {INVOICE_ID}</h3>
@@ -201,6 +180,7 @@ const EmailBannerCard = (
     invoiceId: string;
   },
 ) => {
+  const { INVOICE_ID, BUSINESS_ID } = useIdsStore();
   const { banner_url, email_template_ids, title, invoiceId } = props;
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
@@ -213,10 +193,47 @@ const EmailBannerCard = (
       [TRACKER_NAME],
     );
   };
+
+  const sendEmail = async (e: any) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    try {
+      const result = await fetch('api/send-email', {
+        method: 'POST',
+        body: JSON.stringify({
+          invoiceId: INVOICE_ID,
+          businessId: BUSINESS_ID,
+          locale: 'en',
+          emailAddress: formData.get('emailInput'),
+        }),
+      });
+      toast.success(result.status.toString());
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
   return (
     <div className="p-4 border border-gray-600 rounded-md">
       <Toaster />
       <h1 className="text-xl">{title}</h1>
+
+      <form onSubmit={sendEmail} className="space-x-2">
+        <label>
+          Email input:{' '}
+          <input
+            className="border border-black"
+            name="emailInput"
+            defaultValue=""
+          />
+        </label>
+        <button type="submit" className="p-2 border rounded-md cursor-pointer">
+          Send Email
+        </button>
+      </form>
+
       <div>
         <p>Properties</p>
         <pre className="whitespace-break-spaces">
