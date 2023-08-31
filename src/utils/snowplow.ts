@@ -22,6 +22,6 @@ const configuration: TrackerConfiguration = {
 
 export const TRACKER_NAME = 'spNexGrowthBookDemo';
 export const initialiseSnowplow = () => {
-  // console.log('tracking_url ==> ', TRACKER_URL);
+  console.log('tracking_url ==> ', TRACKER_URL);
   return newTracker(TRACKER_NAME, TRACKER_URL, configuration);
 };
