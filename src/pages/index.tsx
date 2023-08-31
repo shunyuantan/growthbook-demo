@@ -67,8 +67,8 @@ export default function Home() {
   return (
     <main className="mx-8 my-12">
       <div>
-        <h1 className="mb-4 text-lg"> BUSINESS ID: {BUSINESS_ID}</h1>
-        <h1 className="mb-4 text-lg"> INVOICE ID: {INVOICE_ID}</h1>
+        <h3 className=""> BUSINESS ID: {BUSINESS_ID}</h3>
+        <h3 className=""> INVOICE ID: {INVOICE_ID}</h3>
       </div>
       {Object.entries(bannerControls).length > 0 ? (
         <div className="space-y-4">
