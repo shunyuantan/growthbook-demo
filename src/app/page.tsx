@@ -26,8 +26,26 @@ export default function Home() {
   const bannerControls: BannerControlProps | Record<string, never> =
     useFeatureValue('nex_card_banner_v2', {}); //growthbook
 
+  const sendEmail = async () => {
+    try {
+      const result = await fetch('api/send-email', {
+        method: 'POST',
+        body: JSON.stringify({ hello: 'world' }),
+      });
+      toast.success(result.status.toString());
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
   return (
     <main className="mx-8 my-12">
+      <Toaster />
+      <button
+        className="p-2 border rounded-md cursor-pointer"
+        onClick={sendEmail}
+      >
+        Send Email
+      </button>
       <div>
         <h1 className="mb-4 text-xl"> BUSINESS ID: {BUSINESS_ID}</h1>
         <h1 className="mb-4 text-xl"> INVOICE ID: {INVOICE_ID}</h1>

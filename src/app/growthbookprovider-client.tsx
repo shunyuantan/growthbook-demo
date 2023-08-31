@@ -60,7 +60,7 @@ export const GrowthBookProviderClient = ({
    * just contain the items it need like invoiceId and businessId
    */
   useEffect(() => {
-    setGrowthBookAttributes();
+    // setGrowthBookAttributes();
   }, [setGrowthBookAttributes]);
 
   return (
