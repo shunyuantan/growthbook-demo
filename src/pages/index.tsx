@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { useFeatureValue } from '@growthbook/growthbook-react';
-import { TRACKER_NAME } from '@/utils/snowplow';
-import { trackStructEvent } from '@snowplow/browser-tracker';
+import { useCallback, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+
 import { useIdsStore } from '@/hooks/useIdsStore';
+import { BUSINESS_IDS, INVOICE_IDS } from '@/utils/constants';
+import { TRACKER_NAME } from '@/utils/snowplow';
+import { useFeatureValue, useGrowthBook } from '@growthbook/growthbook-react';
+import { trackStructEvent } from '@snowplow/browser-tracker';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -18,19 +21,54 @@ type BannerControlProps = {
   placement_email: BannerControlDetails;
 };
 
+const generateRandomNumber = () => {
+  const numberRange = 100;
+  return Math.floor(Math.random() * numberRange);
+};
+
 export default function Home() {
-  const { BUSINESS_ID, INVOICE_ID } = useIdsStore();
+  const growthbookHook = useGrowthBook();
+  const [RANDOMISING_INDEX, setRandomisingIndex] = useState<number>(0);
+  const { INVOICE_ID, BUSINESS_ID, setBusinessId, setInvoiceId } =
+    useIdsStore();
+
+  useEffect(() => {
+    setRandomisingIndex(generateRandomNumber);
+  }, []);
 
   const bannerControls: BannerControlProps | Record<string, never> =
     useFeatureValue('nex_card_banner_v2', {}); //growthbook
 
-  console.log(bannerControls);
+  const updateIds = useCallback(() => {
+    setBusinessId(BUSINESS_IDS[RANDOMISING_INDEX]);
+    setInvoiceId(INVOICE_IDS[RANDOMISING_INDEX]);
+  }, [RANDOMISING_INDEX, setBusinessId, setInvoiceId]);
+
+  const setGrowthBookAttributes = useCallback(() => {
+    if (!growthbookHook) return;
+    growthbookHook.setAttributes({
+      businessId: BUSINESS_ID, // Configured for ForceValue
+      invoiceId: INVOICE_ID, // Using for hash assignment for experiment
+    });
+  }, [INVOICE_ID, BUSINESS_ID, growthbookHook]);
+
+  useEffect(() => {
+    updateIds();
+  }, [updateIds]);
+
+  /**
+   * WARNING setAttributes cannot have other dependents, should
+   * just contain the items it need like invoiceId and businessId
+   */
+  useEffect(() => {
+    setGrowthBookAttributes();
+  }, [setGrowthBookAttributes]);
 
   return (
     <main className="mx-8 my-12">
       <div>
-        <h1 className="mb-4 text-xl"> BUSINESS ID: {BUSINESS_ID}</h1>
-        <h1 className="mb-4 text-xl"> INVOICE ID: {INVOICE_ID}</h1>
+        <h1 className="mb-4 text-lg"> BUSINESS ID: {BUSINESS_ID}</h1>
+        <h1 className="mb-4 text-lg"> INVOICE ID: {INVOICE_ID}</h1>
       </div>
       {Object.entries(bannerControls).length > 0 ? (
         <div className="space-y-4">
