@@ -4,6 +4,10 @@ import { GrowthBook } from '@growthbook/growthbook-react';
 import { trackStructEvent } from '@snowplow/browser-tracker';
 import { TRACKER_NAME } from './snowplow';
 
+/**
+ * @description GrowthBook configuration
+ * SHOULD ONLY BE IMPORTED ONCE
+ */
 export const growthbook = new GrowthBook({
   apiHost: process.env.NEXT_PUBLIC_GB_API_HOST,
   clientKey: process.env.NEXT_PUBLIC_GB_CLIENT_KEY,

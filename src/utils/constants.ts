@@ -11,7 +11,6 @@ export const BUSINESS_IDS = [
   'business_63737401-2428-4fd5-9e3c-4057d4c586e0',
   'business_980f42ed-de2f-46c8-9787-05e72424b8d7',
   'business_9f6a0fd9-a8cb-45ae-b2a3-2fca5c198cb8',
-  // Selected for GB END
   'business_187734c0-882f-45e0-a669-c87e47f5deab',
   'business_12d750d7-63ae-4c24-b0e9-8d72837a7a54',
   'business_5d3d7215-e97a-4b2b-9e96-5a134c9970a0',
@@ -41,6 +40,7 @@ export const BUSINESS_IDS = [
   'business_e1fbda6e-ceda-4ccb-a90e-623df1d4c4b5',
   'business_597ad64d-47cd-4cce-9440-85e0c4963f54',
   'business_28b91218-39af-49ea-aaf5-4e4e48ef0394',
+  // Selected for GB END
   'business_ec5022bc-e658-4674-9b39-94faaa2f9d39',
   'business_7aac0bae-e247-427b-803a-55bffd54c506',
   'business_dfd4ad02-e9d6-4c7d-9581-02dc16ed7237',

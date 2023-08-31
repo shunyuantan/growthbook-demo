@@ -2,12 +2,10 @@
 'use client';
 
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import { growthbook } from '@/utils/growthbook';
-import { useEffect, useState } from 'react';
 import { TRACKER_NAME, initialiseSnowplow } from '@/utils/snowplow';
 import { trackStructEvent } from '@snowplow/browser-tracker';
 import toast, { Toaster } from 'react-hot-toast';
-import { BUSINESS_IDS, INVOICE_IDS } from '@/utils/constants';
+import { useIdsStore } from '@/hooks/useIdsStore';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -23,26 +21,10 @@ type BannerControlProps = {
 
 export default function Home() {
   initialiseSnowplow();
-  const [RANDOMISING_INDEX, setRandomisingIndex] = useState<number>(0);
-  const [INVOICE_ID, setInvoiceId] = useState<string>('');
-  const [BUSINESS_ID, setBusinessId] = useState<string>('');
-
-  useEffect(() => {
-    setRandomisingIndex(Math.floor(Math.random() * 100));
-  }, []);
+  const { BUSINESS_ID, INVOICE_ID } = useIdsStore();
 
   const bannerControls: BannerControlProps | Record<string, never> =
     useFeatureValue('nex_card_banner_v2', {}); //growthbook
-
-  useEffect(() => {
-    setBusinessId(BUSINESS_IDS[RANDOMISING_INDEX]);
-    setInvoiceId(INVOICE_IDS[RANDOMISING_INDEX]);
-    growthbook.setAttributes({
-      businessId: BUSINESS_ID, // Configured for ForceValue
-      invoiceId: INVOICE_ID, // Using for hash assignment for experiment
-    });
-    // based on the information sent, i can infer the variation
-  }, [RANDOMISING_INDEX, BUSINESS_ID, INVOICE_ID]);
 
   return (
     <main className="mx-8 my-12">
