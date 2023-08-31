@@ -15,10 +15,32 @@ type BannerControlDetails = {
   redirection_url?: string;
   banner_url?: string;
 };
+
+type EmailBannerControlDetails = {
+  enabled: boolean;
+  banner_url?: {
+    en: {
+      url: string;
+      redirection_url: string;
+    };
+    id: {
+      url: string;
+      redirection_url: string;
+    };
+  };
+  email_template_ids?: {
+    en: {
+      product: string;
+    };
+    id: {
+      product: string;
+    };
+  };
+};
 type BannerControlProps = {
   placement_pre: BannerControlDetails;
   placement_post: BannerControlDetails;
-  placement_email: BannerControlDetails;
+  placement_email: EmailBannerControlDetails;
 };
 
 const generateRandomNumber = () => {
@@ -64,8 +86,31 @@ export default function Home() {
     setGrowthBookAttributes();
   }, [setGrowthBookAttributes]);
 
+  const sendEmail = async () => {
+    try {
+      const result = await fetch('api/send-email', {
+        method: 'POST',
+        body: JSON.stringify({
+          invoiceId: INVOICE_ID,
+          businessId: BUSINESS_ID,
+          locale: 'en',
+        }),
+      });
+      toast.success(result.status.toString());
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
+
   return (
     <main className="mx-8 my-12">
+      <Toaster />
+      <button
+        className="p-2 border rounded-md cursor-pointer"
+        onClick={sendEmail}
+      >
+        Send Email
+      </button>
       <div>
         <h3 className=""> BUSINESS ID: {BUSINESS_ID}</h3>
         <h3 className=""> INVOICE ID: {INVOICE_ID}</h3>
@@ -90,11 +135,12 @@ export default function Home() {
           ) : (
             <p>Placement Pre is not enabled</p>
           )}
-          {(bannerControls.placement_email as BannerControlDetails).enabled ? (
-            <BannerCard
+          {(bannerControls.placement_email as EmailBannerControlDetails)
+            .enabled ? (
+            <EmailBannerCard
               invoiceId={INVOICE_ID}
               title="Placement Email"
-              {...(bannerControls.placement_email as BannerControlDetails)}
+              {...(bannerControls.placement_email as EmailBannerControlDetails)}
             />
           ) : (
             <p>Placement Pre is not enabled</p>
@@ -149,6 +195,58 @@ const BannerCard = (
   );
 };
 
+const EmailBannerCard = (
+  props: EmailBannerControlDetails & {
+    title: string;
+    invoiceId: string;
+  },
+) => {
+  const { banner_url, email_template_ids, title, invoiceId } = props;
+  const handleBannerClick = (bannerUrl: string) => {
+    toast.success('Banner Clicked');
+    trackStructEvent(
+      {
+        action: 'Banner Clicked',
+        category: invoiceId,
+        label: bannerUrl,
+      },
+      [TRACKER_NAME],
+    );
+  };
+  return (
+    <div className="p-4 border border-gray-600 rounded-md">
+      <Toaster />
+      <h1 className="text-xl">{title}</h1>
+      <div>
+        <p>Properties</p>
+        <pre className="whitespace-break-spaces">
+          {JSON.stringify({ banner_url, email_template_ids }, null, 2)}
+        </pre>
+      </div>
+      <div>
+        <p>Items</p>
+        <div className="w-40">
+          {banner_url && (
+            <>
+              <div>
+                <p>English</p>
+                <button onClick={() => handleBannerClick(banner_url.en.url)}>
+                  <img src={banner_url.en.url} alt="meme" />
+                </button>
+              </div>
+              <div>
+                <p>ID</p>
+                <button onClick={() => handleBannerClick(banner_url.id.url)}>
+                  <img src={banner_url.id.url} alt="meme" />
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 const Spinner = () => {
   return (
     <div role="status">
