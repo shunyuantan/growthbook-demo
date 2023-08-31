@@ -1,5 +1,3 @@
-'use client';
-
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { trackStructEvent } from '@snowplow/browser-tracker';
 import { TRACKER_NAME } from './snowplow';
@@ -8,7 +6,7 @@ import { TRACKER_NAME } from './snowplow';
  * @description GrowthBook configuration
  * SHOULD ONLY BE IMPORTED ONCE
  */
-export const growthbook = new GrowthBook({
+export const growthbookClient = new GrowthBook({
   apiHost: process.env.NEXT_PUBLIC_GB_API_HOST,
   clientKey: process.env.NEXT_PUBLIC_GB_CLIENT_KEY,
   enableDevMode: true,
@@ -20,7 +18,7 @@ export const growthbook = new GrowthBook({
     });
 
     // need to check if the attribute is available upon snowplow event sent
-    const extraAttributes = growthbook.getAttributes();
+    const extraAttributes = growthbookClient.getAttributes();
     console.log('extraAttributes => ', extraAttributes);
 
     trackStructEvent(
