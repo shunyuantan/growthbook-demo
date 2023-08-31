@@ -2,12 +2,10 @@
 'use client';
 
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import { growthbook } from '@/utils/growthbook';
-import { useEffect, useState } from 'react';
 import { TRACKER_NAME, initialiseSnowplow } from '@/utils/snowplow';
 import { trackStructEvent } from '@snowplow/browser-tracker';
-import { v4 as uuidv4 } from 'uuid';
 import toast, { Toaster } from 'react-hot-toast';
+import { useIdsStore } from '@/hooks/useIdsStore';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -23,34 +21,16 @@ type BannerControlProps = {
 
 export default function Home() {
   initialiseSnowplow();
-  const [RANDOMISING_ID, setRandomisingId] = useState<string>('');
-  const [INVOICE_ID, setInvoiceId] = useState<string>('');
-  const [BUSINESS_ID, setBusinessId] = useState<string>('');
-
-  useEffect(() => {
-    setInvoiceId(() => `invoice_${uuidv4()}`);
-    setBusinessId(() => `business_${uuidv4()}`);
-    setRandomisingId(() => `${uuidv4()}`);
-  }, []);
+  const { BUSINESS_ID, INVOICE_ID } = useIdsStore();
 
   const bannerControls: BannerControlProps | Record<string, never> =
     useFeatureValue('nex_card_banner_v2', {}); //growthbook
 
-  useEffect(() => {
-    growthbook.setAttributes({
-      id: RANDOMISING_ID, // allows GrowthBook to randomise the user
-      businessId: BUSINESS_ID, // from props
-      invoiceId: INVOICE_ID, // from props
-    });
-
-    // based on the information sent, i can infer the variation
-  }, [RANDOMISING_ID, BUSINESS_ID, INVOICE_ID]);
-
   return (
     <main className="mx-8 my-12">
       <div>
-        <h1 className="mb-4 text-xl"> INVOICE ID: {INVOICE_ID}</h1>
         <h1 className="mb-4 text-xl"> BUSINESS ID: {BUSINESS_ID}</h1>
+        <h1 className="mb-4 text-xl"> INVOICE ID: {INVOICE_ID}</h1>
       </div>
       {Object.entries(bannerControls).length > 0 ? (
         <div className="space-y-4">
