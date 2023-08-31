@@ -11,13 +11,13 @@ export const growthbook = new GrowthBook({
   trackingCallback: (experiment, result) => {
     // TODO: Use your real analytics tracking system
     console.log('Viewed Experiment', {
-      experimentId: experiment,
-      variationId: result,
+      experimentId: experiment.key,
+      variationId: result.variationId,
     });
 
     // need to check if the attribute is available upon snowplow event sent
     const extraAttributes = growthbook.getAttributes();
-    console.log('le extras', extraAttributes);
+    console.log('extraAttributes => ', extraAttributes);
 
     trackStructEvent(
       {
