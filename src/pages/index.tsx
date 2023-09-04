@@ -158,7 +158,9 @@ const BannerCard = (
   const {
     i18n: { language },
   } = useTranslation();
-  const selectedLanguage = language as 'en' | 'id';
+  const selectedLanguage = (language === 'en-US' ? 'en' : language) as
+    | 'en'
+    | 'id';
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
     trackStructEvent(
@@ -219,7 +221,9 @@ const EmailBannerCard = (
     i18n: { language },
   } = useTranslation();
   const { selectedCountry } = useCountryStore();
-  const selectedLanguage = language as 'en' | 'id';
+  const selectedLanguage = (language === 'en-US' ? 'en' : language) as
+    | 'en'
+    | 'id';
 
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
