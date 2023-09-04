@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google';
 import { useEffect } from 'react';
 
 import { growthbookClient } from '@/utils/growthbook-client';
+import '@/utils/i18n';
 import { initialiseSnowplow } from '@/utils/snowplow';
 import { GrowthBookProvider } from '@growthbook/growthbook-react';
 
