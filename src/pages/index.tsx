@@ -11,6 +11,7 @@ import { trackStructEvent } from '@snowplow/browser-tracker';
 import { CountrySelect } from '@/components/CountrySelect';
 import { useCountryStore } from '@/hooks/useCountryStore';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 type BannerUrl = {
   en: {
@@ -147,6 +148,10 @@ const BannerCard = (
   },
 ) => {
   const { banner_url, title, invoiceId } = props;
+  const {
+    i18n: { language },
+  } = useTranslation();
+  const selectedLanguage = language as 'en' | 'id';
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
     trackStructEvent(
@@ -171,9 +176,17 @@ const BannerCard = (
       <div>
         <p>Items</p>
         <div className="w-40">
+          <p>
+            Selected Language:{' '}
+            <span className="font-bold">{selectedLanguage}</span>
+          </p>
           {banner_url && (
-            <button onClick={() => handleBannerClick(banner_url.en.url)}>
-              <img src={banner_url.en.url} alt="meme" />
+            <button
+              onClick={() =>
+                handleBannerClick(banner_url[selectedLanguage].url)
+              }
+            >
+              <img src={banner_url[selectedLanguage].url} alt="meme" />
             </button>
           )}
         </div>
@@ -190,6 +203,12 @@ const EmailBannerCard = (
 ) => {
   const { INVOICE_ID, BUSINESS_ID } = useIdsStore();
   const { banner_url, email_template_ids, title, invoiceId } = props;
+  const {
+    i18n: { language },
+  } = useTranslation();
+  const { selectedCountry } = useCountryStore();
+  const selectedLanguage = language as 'en' | 'id';
+
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
     trackStructEvent(
@@ -214,8 +233,9 @@ const EmailBannerCard = (
         body: JSON.stringify({
           invoiceId: INVOICE_ID,
           businessId: BUSINESS_ID,
-          locale: 'en',
+          locale: selectedLanguage,
           emailAddress: formData.get('emailInput'),
+          countryOfOperation: selectedCountry?.value,
         }),
       });
       toast.success(result.status.toString());
@@ -251,20 +271,19 @@ const EmailBannerCard = (
       <div>
         <p>Items</p>
         <div className="w-40">
+          <p>
+            Selected Language:{' '}
+            <span className="font-bold">{selectedLanguage}</span>
+          </p>
           {banner_url && (
             <>
-              <div>
-                <p>English</p>
-                <button onClick={() => handleBannerClick(banner_url.en.url)}>
-                  <img src={banner_url.en.url} alt="meme" />
-                </button>
-              </div>
-              <div>
-                <p>ID</p>
-                <button onClick={() => handleBannerClick(banner_url.id.url)}>
-                  <img src={banner_url.id.url} alt="meme" />
-                </button>
-              </div>
+              <button
+                onClick={() =>
+                  handleBannerClick(banner_url[selectedLanguage].url)
+                }
+              >
+                <img src={banner_url[selectedLanguage].url} alt="meme" />
+              </button>
             </>
           )}
         </div>
