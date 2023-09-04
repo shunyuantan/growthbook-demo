@@ -16,6 +16,7 @@ i18n
   .init({
     fallbackLng: 'en',
     debug: true,
+    load: 'languageOnly',
   });
 
 export default i18n;
