@@ -10,26 +10,27 @@ import { useFeatureValue, useGrowthBook } from '@growthbook/growthbook-react';
 import { trackStructEvent } from '@snowplow/browser-tracker';
 import { CountrySelect } from '@/components/CountrySelect';
 import { useCountryStore } from '@/hooks/useCountryStore';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+
+type BannerUrl = {
+  en: {
+    url: string;
+    redirection_url: string;
+  };
+  id: {
+    url: string;
+    redirection_url: string;
+  };
+};
 
 type BannerControlDetails = {
   enabled: boolean;
-  banner_id?: string;
-  redirection_url?: string;
-  banner_url?: string;
+  banner_url?: BannerUrl;
 };
 
 type EmailBannerControlDetails = {
   enabled: boolean;
-  banner_url?: {
-    en: {
-      url: string;
-      redirection_url: string;
-    };
-    id: {
-      url: string;
-      redirection_url: string;
-    };
-  };
+  banner_url?: BannerUrl;
   email_template_ids?: {
     en: {
       product: string;
@@ -94,6 +95,7 @@ export default function Home() {
     <>
       <Toaster />
       <main className="mx-8 my-12">
+        <LanguageSwitcher />
         <CountrySelect />
         <div className="mb-4">
           <h3 className=""> BUSINESS ID: {BUSINESS_ID}</h3>
@@ -144,7 +146,7 @@ const BannerCard = (
     invoiceId: string;
   },
 ) => {
-  const { banner_id, banner_url, redirection_url, title, invoiceId } = props;
+  const { banner_url, title, invoiceId } = props;
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
     trackStructEvent(
@@ -163,15 +165,15 @@ const BannerCard = (
       <div>
         <p>Properties</p>
         <pre className="whitespace-break-spaces">
-          {JSON.stringify({ banner_id, banner_url, redirection_url }, null, 2)}
+          {JSON.stringify({ banner_url }, null, 2)}
         </pre>
       </div>
       <div>
         <p>Items</p>
         <div className="w-40">
           {banner_url && (
-            <button onClick={() => handleBannerClick(banner_url)}>
-              <img id={banner_id} src={banner_url} alt="meme" />
+            <button onClick={() => handleBannerClick(banner_url.en.url)}>
+              <img src={banner_url.en.url} alt="meme" />
             </button>
           )}
         </div>
