@@ -54,6 +54,9 @@ const generateRandomNumber = () => {
 
 export default function Home() {
   const growthbookHook = useGrowthBook();
+  const {
+    i18n: { language: selectedLanguage },
+  } = useTranslation();
   const { selectedCountry } = useCountryStore();
   const [RANDOMISING_INDEX, setRandomisingIndex] = useState<number>(0);
   const { INVOICE_ID, BUSINESS_ID, setBusinessId, setInvoiceId } =
@@ -92,6 +95,7 @@ export default function Home() {
     setGrowthBookAttributes();
   }, [setGrowthBookAttributes]);
 
+  if (!selectedCountry) <Spinner />;
   return (
     <>
       <Toaster />
@@ -151,7 +155,7 @@ const BannerCard = (
   const {
     i18n: { language },
   } = useTranslation();
-  const selectedLanguage = (language as 'en' | 'id') || 'en';
+  const selectedLanguage = language as 'en' | 'id';
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
     trackStructEvent(
@@ -207,7 +211,7 @@ const EmailBannerCard = (
     i18n: { language },
   } = useTranslation();
   const { selectedCountry } = useCountryStore();
-  const selectedLanguage = (language as 'en' | 'id') || 'en';
+  const selectedLanguage = language as 'en' | 'id';
 
   const handleBannerClick = (bannerUrl: string) => {
     toast.success('Banner Clicked');
