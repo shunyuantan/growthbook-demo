@@ -95,7 +95,10 @@ export default function Home() {
     setGrowthBookAttributes();
   }, [setGrowthBookAttributes]);
 
-  if (!selectedCountry) <Spinner />;
+  if (!selectedLanguage) {
+    console.log('Language Loading');
+    return <Spinner />;
+  }
   return (
     <>
       <Toaster />
@@ -167,6 +170,11 @@ const BannerCard = (
       [TRACKER_NAME],
     );
   };
+
+  console.log('BannerCard Rendered', {
+    banner_url,
+    selectedLanguage,
+  });
   return (
     <div className="p-4 border border-gray-600 rounded-md">
       <Toaster />
@@ -224,6 +232,11 @@ const EmailBannerCard = (
       [TRACKER_NAME],
     );
   };
+
+  console.log('EmailBannerCard Rendered', {
+    banner_url,
+    selectedLanguage,
+  });
 
   const sendEmail = async (e: any) => {
     e.preventDefault();
