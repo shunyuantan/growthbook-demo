@@ -8,6 +8,8 @@ import { BUSINESS_IDS, INVOICE_IDS } from '@/utils/constants';
 import { TRACKER_NAME } from '@/utils/snowplow';
 import { useFeatureValue, useGrowthBook } from '@growthbook/growthbook-react';
 import { trackStructEvent } from '@snowplow/browser-tracker';
+import { CountrySelect } from '@/components/CountrySelect';
+import { useCountryStore } from '@/hooks/useCountryStore';
 
 type BannerControlDetails = {
   enabled: boolean;
@@ -50,6 +52,7 @@ const generateRandomNumber = () => {
 
 export default function Home() {
   const growthbookHook = useGrowthBook();
+  const { selectedCountry } = useCountryStore();
   const [RANDOMISING_INDEX, setRandomisingIndex] = useState<number>(0);
   const { INVOICE_ID, BUSINESS_ID, setBusinessId, setInvoiceId } =
     useIdsStore();
@@ -67,12 +70,13 @@ export default function Home() {
   }, [RANDOMISING_INDEX, setBusinessId, setInvoiceId]);
 
   const setGrowthBookAttributes = useCallback(() => {
-    if (!growthbookHook) return;
+    if (!growthbookHook || !selectedCountry) return;
     growthbookHook.setAttributes({
       businessId: BUSINESS_ID, // Configured for ForceValue
       invoiceId: INVOICE_ID, // Using for hash assignment for experiment
+      countryOfOperation: selectedCountry.value,
     });
-  }, [INVOICE_ID, BUSINESS_ID, growthbookHook]);
+  }, [INVOICE_ID, BUSINESS_ID, growthbookHook, selectedCountry]);
 
   useEffect(() => {
     updateIds();
@@ -87,48 +91,50 @@ export default function Home() {
   }, [setGrowthBookAttributes]);
 
   return (
-    <main className="mx-8 my-12">
+    <>
       <Toaster />
-
-      <div>
-        <h3 className=""> BUSINESS ID: {BUSINESS_ID}</h3>
-        <h3 className=""> INVOICE ID: {INVOICE_ID}</h3>
-      </div>
-      {Object.entries(bannerControls).length > 0 ? (
-        <div className="space-y-4">
-          {(bannerControls.placement_pre as BannerControlDetails).enabled ? (
-            <BannerCard
-              invoiceId={INVOICE_ID}
-              title="Placement Pre"
-              {...(bannerControls.placement_pre as BannerControlDetails)}
-            />
-          ) : (
-            <p>Placement Pre is not enabled</p>
-          )}
-          {(bannerControls.placement_post as BannerControlDetails).enabled ? (
-            <BannerCard
-              invoiceId={INVOICE_ID}
-              title="Placement Post"
-              {...(bannerControls.placement_post as BannerControlDetails)}
-            />
-          ) : (
-            <p>Placement Pre is not enabled</p>
-          )}
-          {(bannerControls.placement_email as EmailBannerControlDetails)
-            .enabled ? (
-            <EmailBannerCard
-              invoiceId={INVOICE_ID}
-              title="Placement Email"
-              {...(bannerControls.placement_email as EmailBannerControlDetails)}
-            />
-          ) : (
-            <p>Placement Pre is not enabled</p>
-          )}
+      <main className="mx-8 my-12">
+        <CountrySelect />
+        <div className="mb-4">
+          <h3 className=""> BUSINESS ID: {BUSINESS_ID}</h3>
+          <h3 className=""> INVOICE ID: {INVOICE_ID}</h3>
         </div>
-      ) : (
-        <Spinner />
-      )}
-    </main>
+        {Object.entries(bannerControls).length > 0 ? (
+          <div className="space-y-4">
+            {(bannerControls.placement_pre as BannerControlDetails).enabled ? (
+              <BannerCard
+                invoiceId={INVOICE_ID}
+                title="Placement Pre"
+                {...(bannerControls.placement_pre as BannerControlDetails)}
+              />
+            ) : (
+              <p>Placement Pre is not enabled</p>
+            )}
+            {(bannerControls.placement_post as BannerControlDetails).enabled ? (
+              <BannerCard
+                invoiceId={INVOICE_ID}
+                title="Placement Post"
+                {...(bannerControls.placement_post as BannerControlDetails)}
+              />
+            ) : (
+              <p>Placement Pre is not enabled</p>
+            )}
+            {(bannerControls.placement_email as EmailBannerControlDetails)
+              .enabled ? (
+              <EmailBannerCard
+                invoiceId={INVOICE_ID}
+                title="Placement Email"
+                {...(bannerControls.placement_email as EmailBannerControlDetails)}
+              />
+            ) : (
+              <p>Placement Pre is not enabled</p>
+            )}
+          </div>
+        ) : (
+          <Spinner />
+        )}
+      </main>
+    </>
   );
 }
 
