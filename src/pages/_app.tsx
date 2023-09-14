@@ -8,12 +8,15 @@ import { growthbookClient } from '@/utils/growthbook-client';
 import '@/utils/i18n';
 import { initialiseSnowplow } from '@/utils/snowplow';
 import { GrowthBookProvider } from '@growthbook/growthbook-react';
+import { addPlugin } from '@snowplow/browser-tracker';
+import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps }: AppProps) {
   initialiseSnowplow();
+  addPlugin({ plugin: SiteTrackingPlugin() });
 
   useEffect(() => {
     // Load features asynchronously when the app renders

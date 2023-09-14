@@ -12,6 +12,7 @@ import { CountrySelect } from '@/components/CountrySelect';
 import { useCountryStore } from '@/hooks/useCountryStore';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
+import { trackTiming } from '@snowplow/browser-plugin-site-tracking';
 
 type BannerUrl = {
   en: {
@@ -303,7 +304,19 @@ const EmailBannerCard = (
                   handleBannerClick(banner_url[selectedLanguage].url)
                 }
               >
-                <img src={banner_url[selectedLanguage].url} alt="meme" />
+                <img
+                  onLoad={(event) => {
+                    console.log('before', event.timeStamp);
+                    trackTiming({
+                      label: banner_url[selectedLanguage].url,
+                      category: 'Banner Load',
+                      variable: 'banner_load',
+                      timing: event.timeStamp,
+                    });
+                  }}
+                  src={banner_url[selectedLanguage].url}
+                  alt="meme"
+                />
               </button>
             </>
           )}

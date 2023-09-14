@@ -1,7 +1,8 @@
 import { newTracker, TrackerConfiguration } from '@snowplow/browser-tracker';
+import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
 
 const TESTING_TRACKER_URL =
-  'https://c4ad0795-3fc7-4ebc-a0fa-fbb62c94fe6a.app.try-snowplow.com';
+  'https://0e5c7e3a-2c36-498f-b953-4a45bf92cbea.app.try-snowplow.com';
 
 let TRACKER_URL: string;
 
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'production') {
  */
 const configuration: TrackerConfiguration = {
   appId: 'nex-growth-book-demo',
+  // plugins: [SiteTrackingPlugin()],
 };
 
 export const TRACKER_NAME = 'spNexGrowthBookDemo';
