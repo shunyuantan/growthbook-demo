@@ -1,5 +1,8 @@
 import { GrowthBook } from '@growthbook/growthbook-react';
-import { trackStructEvent } from '@snowplow/browser-tracker';
+import {
+  trackSelfDescribingEvent,
+  trackStructEvent,
+} from '@snowplow/browser-tracker';
 import { TRACKER_NAME } from './snowplow';
 import { experimentStuffStore } from '@/hooks/experimentStuffStore';
 
@@ -36,5 +39,16 @@ export const growthbookClient = new GrowthBook({
       },
       [TRACKER_NAME],
     );
+    // trackSelfDescribingEvent(
+    //   {
+    //     event: {
+    //       schema: 'iglu:com.trysnowplow/object/jsonschema/1-0-0',
+    //       data: {
+    //         name: 'ExperimentViewed',
+    //       },
+    //     },
+    //   },
+    //   [TRACKER_NAME],
+    // );
   },
 });

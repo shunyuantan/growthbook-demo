@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { trackTiming } from '@snowplow/browser-plugin-site-tracking';
 import { experimentStuffStore } from '@/hooks/experimentStuffStore';
 import { pubSubExperimentStore } from '@/hooks/pubSubExperimentStore';
+import Image from 'next/image';
 
 type BannerUrl = {
   en: {
@@ -97,11 +98,6 @@ export default function Home() {
   useEffect(() => {
     setGrowthBookAttributes();
   }, [setGrowthBookAttributes]);
-
-  const { getState } = experimentStuffStore;
-  const { experimentId, variantId } = getState();
-  console.log('experimentId', experimentId);
-  console.log('variantId', variantId);
 
   if (!selectedLanguage) {
     console.log('Language Loading');
@@ -208,7 +204,25 @@ const BannerCard = (
                 handleBannerClick(banner_url[selectedLanguage].url)
               }
             >
-              <img src={banner_url[selectedLanguage].url} alt="meme" />
+              <Image
+                width={300}
+                height={300}
+                onLoad={(event) => {
+                  const { getState } = experimentStuffStore;
+                  const { experimentId, variantId } = getState();
+                  trackStructEvent(
+                    {
+                      label: experimentId,
+                      property: variantId, // variant id
+                      category: invoiceId,
+                      action: 'Banner on load',
+                    },
+                    [TRACKER_NAME],
+                  );
+                }}
+                src={banner_url[selectedLanguage].url}
+                alt="meme"
+              />
             </button>
           )}
         </div>
@@ -311,15 +325,19 @@ const EmailBannerCard = (
                   handleBannerClick(banner_url[selectedLanguage].url)
                 }
               >
-                <img
+                <Image
+                  width={300}
+                  height={300}
                   onLoad={(event) => {
                     console.log('before', event.timeStamp);
-                    trackTiming({
-                      label: banner_url[selectedLanguage].url,
-                      category: 'Banner Load',
-                      variable: 'banner_load',
-                      timing: event.timeStamp,
-                    });
+                    if (event.nativeEvent.timeStamp) {
+                      trackTiming({
+                        label: banner_url[selectedLanguage].url,
+                        category: 'Email Banner Load',
+                        variable: 'banner_load',
+                        timing: event.nativeEvent.timeStamp,
+                      });
+                    }
                   }}
                   src={banner_url[selectedLanguage].url}
                   alt="meme"
