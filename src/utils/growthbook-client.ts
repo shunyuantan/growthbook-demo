@@ -8,7 +8,7 @@ import { experimentStuffStore } from '@/hooks/experimentStuffStore';
  * SHOULD ONLY BE IMPORTED ONCE
  */
 
-const { getState, setState } = experimentStuffStore;
+const { setState } = experimentStuffStore;
 
 export const growthbookClient = new GrowthBook({
   apiHost: process.env.NEXT_PUBLIC_GB_API_HOST,

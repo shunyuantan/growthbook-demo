@@ -14,6 +14,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { trackTiming } from '@snowplow/browser-plugin-site-tracking';
 import { experimentStuffStore } from '@/hooks/experimentStuffStore';
+import { pubSubExperimentStore } from '@/hooks/pubSubExperimentStore';
 
 type BannerUrl = {
   en: {
