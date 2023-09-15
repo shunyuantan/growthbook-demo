@@ -13,6 +13,7 @@ import { useCountryStore } from '@/hooks/useCountryStore';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { trackTiming } from '@snowplow/browser-plugin-site-tracking';
+import { experimentStuffStore } from '@/hooks/experimentStuffStore';
 
 type BannerUrl = {
   en: {
@@ -95,6 +96,11 @@ export default function Home() {
   useEffect(() => {
     setGrowthBookAttributes();
   }, [setGrowthBookAttributes]);
+
+  const { getState } = experimentStuffStore;
+  const { experimentId, variantId } = getState();
+  console.log('experimentId', experimentId);
+  console.log('variantId', variantId);
 
   if (!selectedLanguage) {
     console.log('Language Loading');
