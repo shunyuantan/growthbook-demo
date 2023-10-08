@@ -52,3 +52,46 @@ export const growthbookClient = new GrowthBook({
     // );
   },
 });
+
+/**
+ * @description Experiment Exposure event (unstruct event)
+ */
+trackSelfDescribingEvent({
+  event: {
+    schema:
+      'https://iluma-igluschema-repository.s3.ap-southeast-1.amazonaws.com/schemas/com.xendit/experiment_exposure_1/jsonschema/1-0-0',
+    data: {
+      experimentId: 'nex_card_banner_v3',
+      variantId: '0 | 1 | 2', // control | variant 1 | variant 2
+      timestamp: '2021-09-30T09:00:00.000Z',
+      user_id: '1234567890',
+    },
+  },
+});
+
+/**
+ * @description Invoice Loaded event (struct event)
+ */
+trackStructEvent({
+  action: 'Invoice Loaded',
+  label: 'Experiment Placement',
+  property: 'placement_pre | placement_post',
+  category: '',
+  context: [
+    {
+      schema:
+        'https://iluma-igluschema-repository.s3.ap-southeast-1.amazonaws.com/schemas/com.xendit/experimentation_context_1/jsonschema/1-0-0',
+      data: {
+        experimentId: 'nex_card_banner_v3',
+        variantId: '0 | 1 | 2', // control | variant 1 | variant 2
+      },
+    },
+    {
+      schema:
+        'https://iluma-igluschema-repository.s3.ap-southeast-1.amazonaws.com/schemas/com.xendit/invoice_context/jsonschema/1-0-0',
+      data: {
+        invoice_id: '',
+      },
+    },
+  ],
+});
