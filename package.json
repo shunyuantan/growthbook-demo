@@ -10,6 +10,7 @@
     "starter",
     "typescript"
   ],
+
   "scripts": {
     "dev": "next",
     "build": "next build",
