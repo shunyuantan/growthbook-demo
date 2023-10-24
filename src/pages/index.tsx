@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { useIdsStore } from '@/hooks/useIdsStore';
@@ -14,7 +14,6 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { trackTiming } from '@snowplow/browser-plugin-site-tracking';
 import { experimentStuffStore } from '@/hooks/experimentStuffStore';
-import { pubSubExperimentStore } from '@/hooks/pubSubExperimentStore';
 import Image from 'next/image';
 
 type BannerUrl = {
