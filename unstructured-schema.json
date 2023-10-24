@@ -1,0 +1,142 @@
+{
+  "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+  "description": "Schema for nex card & checkout general events",
+  "self": {
+    "vendor": "com.snowplowanalytics",
+    "name": "nex-card_schema-1",
+    "format": "jsonschema",
+    "version": "1-0-0"
+  },
+  "type": "object",
+  "properties": {
+    "businessId": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "invoiceId": {
+      "type": "string"
+    },
+    "placement": {
+      "type": "string"
+    },
+    "bannerUrl": {
+      "type": "string"
+    },
+    "urlRedirection": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "businessId",
+    "userId",
+    "invoiceId",
+    "placement",
+    "bannerUrl",
+    "urlRedirection"
+  ],
+  "additionalProperties": false
+}
+
+{
+  "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+  "description": "Schema for nex card & checkout experiment events",
+  "self": {
+    "vendor": "com.snowplowanalytics",
+    "name": "nex-card_schema-1",
+    "format": "jsonschema",
+    "version": "1-0-0"
+  },
+  "type": "object",
+  "properties": {
+    "experimentId": {
+      "type": "string"
+    },
+    "variationId": {
+      "type": "string"
+    },
+    "invoiceId": {
+      "type": "string"
+    },
+  },
+  "required": [
+    "experimentId",
+    "variationId",
+    "invoiceId"],
+  "additionalProperties": false
+}
+
+{
+  "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+  "description": "General schema for nex card x checkout events",
+  "self": {
+    "vendor": "com.snowplowanalytics",
+    "name": "nex-card_x_checkout_schema",
+    "format": "jsonschema",
+    "version": "1-0-0"
+  },
+  "type": "object",
+  "properties": {
+    "experimentId": {
+      "type": "string"
+    },
+    "variationId": {
+      "type": "string"
+    },
+    "invoiceId": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "eventName": {
+      "type": "string"
+    },
+  },
+  "required": [
+    "invoiceId",
+    "eventName"
+  ],
+  "additionalProperties": false
+}
+
+{
+  "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+  "description": "General schema for nex card x checkout events",
+  "self": {
+    "vendor": "com.snowplowanalytics",
+    "name": "nex-card_x_checkout_schema",
+    "format": "jsonschema",
+    "version": "1-0-0"
+  },
+  "type": "object",
+  "properties": {
+    "experimentId": {
+      "type": "string"
+    },
+    "variationId": {
+      "type": "string"
+    },
+    "invoiceId": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "eventName": {
+      "type": "string"
+    },
+    "placement": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "invoiceId",
+    "eventName",
+    "experimentId",
+    "variationId",
+  ],
+  "additionalProperties": false
+}

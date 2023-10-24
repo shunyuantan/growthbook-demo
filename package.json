@@ -10,9 +10,11 @@
     "starter",
     "typescript"
   ],
+
   "scripts": {
     "dev": "next",
     "build": "next build",
+
     "start": "next start",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js|tsx)\"",
